@@ -1,0 +1,64 @@
+#!/usr/bin/env zsh
+
+export DISPLAY
+
+function complain {
+    if pgrep X &> /dev/null; then
+        DISPLAY=:0
+        X_user="$(ps --no-headers -o user "$(pgrep xinit)")"
+    else
+        DISPLAY=""
+    fi
+
+    wall $1
+    [[ -n ${DISPLAY} ]] && sudo -u ${X_user} xcowsay -t 30 --image ~cdchawthorne/pictures/zelos.jpg $1
+}
+
+function extract_battery_level {
+    awk '{gsub("%,","",$4); print $4}' <<< $1
+}
+
+function extract_battery_state {
+    awk '{gsub(",","",$3); print $3}' <<< $1
+}
+
+warned_15=n
+warned_10=n
+warned_urgent=n
+
+while true; do
+
+    acpi_out="$(acpi)"
+    battery_level="$(extract_battery_level ${acpi_out})"
+    battery_state="$(extract_battery_state ${acpi_out})"
+
+    if [[ ${battery_state} =~ ^(Full|Charging)$ ]]; then
+        [[ ${warned_15} == y ]] && warned_15=n
+        [[ ${warned_10} == y ]] && warned_10=n
+        [[ ${warned_urgent} == y ]] && warned_urgent=n
+
+    elif [[ ${warned_urgent} == y ]]; then
+        pm-hibernate
+
+    elif [[ ${battery_level} -le 5 ]]; then
+        complaint="We've got a serious situation here, man; "
+        complaint+="if I don't get some juice in the next 60 seconds, I'm going down."
+
+        complain ${complaint}
+        warned_urgent=y
+        warned_10=y
+        warned_15=y
+
+    elif [[ ${battery_level} -le 10 && ${warned_10} == n ]]; then
+        complain "Yo! I'm only at 10% power; you want to plug me in or something?"
+        warned_10=y
+        warned_15=y
+
+    elif [[ ${battery_level} -le 15 && ${warned_15} == n ]]; then
+        complain "Hey, man, I'm losing power here; I'm only running at 15%."
+        warned_15=y
+    fi
+
+    sleep 60
+
+done
