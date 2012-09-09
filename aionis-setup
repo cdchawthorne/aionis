@@ -1,4 +1,4 @@
 #!/usr/bin/env zsh
 
-aionis_root_dir="$(dirname "$(realpath $0)")"
+aionis_root_dir=$(dirname "$(realpath $0)")
 ln -s ${aionis_root_dir}/aionis /etc/rc.d/
