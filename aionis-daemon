@@ -22,8 +22,8 @@ function extract_battery_state {
     awk '{gsub(",","",$3); print $3}' <<< $1
 }
 
-warned_20=n
-warned_15=n
+warned_once=n
+warned_twice=n
 warned_urgent=n
 
 while true; do
@@ -33,8 +33,8 @@ while true; do
     battery_state=$(extract_battery_state ${acpi_out})
 
     if [[ ${battery_state} =~ ^(Full|Charging)$ ]]; then
-        [[ ${warned_20} == y ]] && warned_20=n
-        [[ ${warned_15} == y ]] && warned_15=n
+        [[ ${warned_once} == y ]] && warned_once=n
+        [[ ${warned_twice} == y ]] && warned_twice=n
         [[ ${warned_urgent} == y ]] && warned_urgent=n
 
     elif [[ ${warned_urgent} == y ]]; then
@@ -46,17 +46,17 @@ while true; do
 
         complain ${complaint}
         warned_urgent=y
-        warned_15=y
-        warned_20=y
+        warned_twice=y
+        warned_once=y
 
-    elif [[ ${battery_level} -le 15 && ${warned_15} == n ]]; then
+    elif [[ ${battery_level} -le 15 && ${warned_twice} == n ]]; then
         complain "Yo! I'm only at 15% power; you want to plug me in or something?"
-        warned_15=y
-        warned_20=y
+        warned_twice=y
+        warned_once=y
 
-    elif [[ ${battery_level} -le 20 && ${warned_20} == n ]]; then
+    elif [[ ${battery_level} -le 20 && ${warned_once} == n ]]; then
         complain "Hey, man, I'm losing power here; I'm only running at 20%."
-        warned_20=y
+        warned_once=y
     fi
 
     sleep 60

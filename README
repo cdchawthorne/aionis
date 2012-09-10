@@ -1,3 +1,8 @@
 A basic power manager daemon.
 Picture of Zelos from
 http://media.giantbomb.com/uploads/0/3614/186239-zelos_wilder.._large.jpg.
+
+Requires:
+pm-utils
+xcowsay
+acpi

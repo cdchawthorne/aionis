@@ -16,7 +16,7 @@ ARGS=
 
 PID="$(pgrep "${daemon}")"
 function spawn-aionis {
-    "${daemon_bin}" "$@" &
+    "${daemon_bin}" "$@" &> /dev/null < /dev/null &
     disown
 }
 
