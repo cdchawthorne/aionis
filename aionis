@@ -14,7 +14,7 @@ ARGS=
 
 [[ -r "/etc/conf.d/${daemon}" ]] && . "/etc/conf.d/${daemon}"
 
-PID="$(pgrep "${daemon}")"
+PID="$(pgrep -f "^zsh .*/${daemon}$")"
 function spawn-aionis {
     "${daemon_bin}" "$@" &> /dev/null < /dev/null &
     disown
