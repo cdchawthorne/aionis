@@ -1,4 +1,18 @@
 #!/usr/bin/env zsh
 
+function usage {
+    echo "usage: $(basename $0)" 1>&2
+    echo "must be run as root" 1>&2
+}
+
+[[ $# -eq 0 ]] || { usage; exit 1; }
+[[ $(whoami) == root ]] || { usage; exit 1; }
+
 aionis_root_dir=$(dirname "$(realpath $0)")
-ln -s ${aionis_root_dir}/aionis /etc/rc.d/
+
+cp ${aionis_root_dir}/aionis /etc/rc.d/
+cp ${aionis_root_dir}/aionis-daemon /usr/sbin/
+if [[ ! -d /usr/share/aionis ]]; then
+    mkdir /usr/share/aionis
+fi
+cp ${aionis_root_dir}/zelos.jpg /usr/share/aionis/

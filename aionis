@@ -7,14 +7,14 @@ function usage {
 . /etc/rc.d/functions
 
 name=aionis
-bin_dir="$(dirname "$(realpath $0)")"
+bin_dir=/usr/sbin
 daemon=aionis-daemon
 daemon_bin="${bin_dir}/${daemon}"
 ARGS=
 
 [[ -r "/etc/conf.d/${daemon}" ]] && . "/etc/conf.d/${daemon}"
 
-PID="$(pgrep -f "^zsh .*/${daemon}$")"
+PID="$(pgrep -f "^zsh ${daemon_bin}$")"
 function spawn-aionis {
     "${daemon_bin}" "$@" &> /dev/null < /dev/null &
     disown

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-picture=$(dirname "$(realpath $0)")/zelos.jpg
+picture=/usr/share/aionis/zelos.jpg
 
 function complain {
     if pgrep X &> /dev/null; then
