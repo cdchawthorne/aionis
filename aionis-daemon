@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 
 picture=/usr/share/aionis/zelos.jpg
+# If DISPLAY is not in the environment, xcowsay will think no display is open
+export DISPLAY
 
 function complain {
     if pgrep X &> /dev/null; then
