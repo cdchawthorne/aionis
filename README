@@ -8,7 +8,7 @@ xcowsay
 acpi
 zsh
 
-To install:
+To install or update:
 sudo ./aionis-setup
 
 To make sure aionis is run at startup, add it to the daemons array in
