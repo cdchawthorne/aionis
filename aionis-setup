@@ -9,10 +9,13 @@ function usage {
 [[ $(whoami) == root ]] || { usage; exit 1; }
 
 aionis_root_dir=$(dirname "$(realpath $0)")
+systemd_conf_dir=/etc/systemd/system
+bin_dir=/usr/bin
+aionis_data_dir=/usr/share/aionis
 
-cp ${aionis_root_dir}/aionis /etc/rc.d/
-cp ${aionis_root_dir}/aionis-daemon /usr/sbin/
-if [[ ! -d /usr/share/aionis ]]; then
-    mkdir /usr/share/aionis
+cp ${aionis_root_dir}/aionis.service ${systemd_conf_dir}/
+cp ${aionis_root_dir}/aionis-daemon ${bin_dir}/
+if [[ ! -d ${aionis_data_dir}/ ]]; then
+    mkdir ${aionis_data_dir}/
 fi
-cp ${aionis_root_dir}/zelos.jpg /usr/share/aionis/
+cp ${aionis_root_dir}/zelos.jpg ${aionis_data_dir}/
