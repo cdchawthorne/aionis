@@ -8,9 +8,8 @@ xcowsay
 acpi
 zsh
 
-To install or update:
-sudo ./aionis-setup
+To install or update, run the following as root:
+./aionis-setup
 
-To make sure aionis is run at startup, add it to the daemons array in
-/etc/rc.conf:
-DAEMONS=(... aionis)
+To run aionis at startup, run the following as root:
+systemctl enable aionis
