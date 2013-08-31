@@ -1,0 +1,9 @@
+[Unit]
+Description=Aionis Daemon
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/aionis-daemon
+
+[Install]
+WantedBy=multi-user.target
