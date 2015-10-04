@@ -34,6 +34,12 @@ while true; do
     battery_level=$(extract_battery_level ${acpi_out})
     battery_state=$(extract_battery_state ${acpi_out})
 
+    if [[ -z ${acpi_out} || -z ${battery_state} || -z ${battery_level} ]]; then
+        complain 'ERROR: aoinis failed; acpi not returning expected output'
+        echo 'ERROR: aoinis failed; acpi not returning expected output' 1>&2
+        exit 1
+    fi
+
     if [[ ${battery_state} =~ ^(Full|Charging)$ ]]; then
         [[ ${warned_once} == y ]] && warned_once=n
         [[ ${warned_twice} == y ]] && warned_twice=n
@@ -42,7 +48,7 @@ while true; do
     elif [[ ${warned_urgent} == y ]]; then
         pm-hibernate
 
-    elif [[ ${battery_level} -le 10 ]]; then
+    elif [[ ${battery_level} -le 3 ]]; then
         complaint="We've got a serious situation here, man; "
         complaint+="if I don't get some juice in the next 60 seconds, I'm going down."
 
@@ -51,13 +57,13 @@ while true; do
         warned_twice=y
         warned_once=y
 
-    elif [[ ${battery_level} -le 15 && ${warned_twice} == n ]]; then
-        complain "Yo! I'm only at 15% power; you want to plug me in or something?"
+    elif [[ ${battery_level} -le 5 && ${warned_twice} == n ]]; then
+        complain "Yo! I'm only at 5% power; you want to plug me in or something?"
         warned_twice=y
         warned_once=y
 
-    elif [[ ${battery_level} -le 20 && ${warned_once} == n ]]; then
-        complain "Hey, man, I'm losing power here; I'm only running at 20%."
+    elif [[ ${battery_level} -le 8 && ${warned_once} == n ]]; then
+        complain "Hey, man, I'm losing power here; I'm only running at 8%."
         warned_once=y
     fi
 
